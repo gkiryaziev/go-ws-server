@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Websocket Index</title>
+	<!-- styles and scripts -->
+	<link rel="stylesheet" href="src/bootstrap-3.3.6/css/bootstrap.css">
+	<script src="src/jquery-2.2.0.js"></script>
+	<script src="src/bootstrap-3.3.6/js/bootstrap.js"></script>
+	<script src="websocket.js"></script>
+</head>
+<body onload = "init()">
+	<br>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-data">
+					<div>
+						<label class="control-label" for="txtAddress">Address</label>
+						<input class="form-control" id="txtAddress" type="text" value="ws://127.0.0.1:8080/ws">
+					</div>
+					<div>
+						<button class="btn btn-primary" type = "button" onclick = "connect()">connect to server</button>
+						<button class="btn btn-primary" type = "button" onclick = "disconnect()">disconnect</button>
+					</div>
+					<!--  -------------------- -->
+					<div>
+						<label class="control-label" for="txtTopic">Topic</label>
+						<input class="form-control" id="txtTopic" type="text" value="RPI1_LED0">
+					</div>
+					<div>
+						<button class="btn btn-primary" type = "button" onclick = "subscribe()">subscribe</button>
+						<button class="btn btn-primary" type = "button" onclick = "unsubscribe()">unsubscribe</button>
+					</div>
+					<div>
+						<label class="control-label" for="txtData">Data</label>
+						<input class="form-control" id="txtData" type="text" value="ON">
+					</div>
+					<div>
+						<button class="btn btn-primary" type = "button" onclick = "publish()">publish</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div>
+					<label class="control-label" for="txtText">Message</label>
+					<input class="form-control" id="txtText" type="text" value='{"action" : "", "topic" : "LED0", "data" : "ON"}'>
+				</div>
+				<div>
+					<button class="btn btn-primary" type = "button" onclick = "sendMessage()">send message</button>
+					<a href="/api/v1/logs" target="_blank">Logs</a>
+					<a href="/api/v1/topics" target="_blank">Topics</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-data-header" id='output'></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
