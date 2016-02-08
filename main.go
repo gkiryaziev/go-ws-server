@@ -24,8 +24,8 @@ func main() {
 	mx := mux.NewRouter()
 
 	// variables
-	hostIP := "192.168.2.22"
-	hostPort := "8080"
+	hostIP := "127.0.0.1"
+	hostPort := "8000"
 
 	// http server address and port
 	hostBind := fmt.Sprintf("%s:%s", hostIP, hostPort)

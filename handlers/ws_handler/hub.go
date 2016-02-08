@@ -1,10 +1,7 @@
 package ws_handler
 
 import (
-	"fmt"
-	"time"
 	"encoding/json"
-
 	"github.com/jmoiron/sqlx"
 )
 
@@ -63,9 +60,6 @@ func (this *hub) Run() {
 
 		// read incoming message
 		case b := <-this.broadcast:
-
-			start := time.Now()
-
 			// add log
 			this.service.addLog(b.uid, b.address, string(b.message))
 
@@ -97,7 +91,6 @@ func (this *hub) Run() {
 						}
 					}
 				}
-				fmt.Println("PUBLISH elapsed", time.Since(start))
 			}
 		}
 	}
