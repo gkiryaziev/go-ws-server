@@ -1,8 +1,11 @@
 package ws_handler
 
 import (
+	"sync"
 	"github.com/jmoiron/sqlx"
 )
+
+var mutex sync.RWMutex
 
 type wsService struct {
 	db *sqlx.DB
@@ -102,6 +105,9 @@ func (this *wsService) unSubscribeAll(uid string) error {
 // add log
 // ==========================
 func (this *wsService) addLog(uid, remote_address, message string) error {
+	mutex.Lock()
+	defer mutex.Unlock()
+
 	_, err := this.db.NamedExec("insert into logs(uid, remote_address, message) values(:uid, :remote_address, :message)",
 		map[string]interface{}{"uid": uid, "remote_address": remote_address, "message": message})
 	if err != nil {
