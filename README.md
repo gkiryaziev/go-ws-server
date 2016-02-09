@@ -1,4 +1,4 @@
-##	Golang Publish/Subscribe Websocket Server with Gorilla ToolKit
+##	Golang Publish/Subscribe Websocket Server
 
 [Go](https://golang.org/) websocket server example with [Gorilla](http://www.gorillatoolkit.org/) toolkit and [SQLite](https://www.sqlite.org/) database.
 In this example you can subscribe, unsubscribe and publish messages.
