@@ -11,3 +11,5 @@ Message example:
 ```
 
 PS Version with goroutines and channels.
+
+![Mind](/mind.png?raw=true "Mind")
