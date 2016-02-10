@@ -6,7 +6,7 @@ import (
 )
 
 type hub struct {
-	connections map[*connection]bool
+	connections map[string]*connection
 	broadcast   chan *broadcast
 	register    chan *connection
 	unregister  chan *connection
@@ -18,7 +18,7 @@ type hub struct {
 // ==========================
 func NewHub(db *sqlx.DB) *hub {
 	return &hub{
-		connections: make(map[*connection]bool),
+		connections: make(map[string]*connection),
 		broadcast:   make(chan *broadcast),
 		register:    make(chan *connection),
 		unregister:  make(chan *connection),
@@ -34,7 +34,7 @@ func (this *hub) Run() {
 		select {
 		// register new connection
 		case conn := <-this.register:
-			this.connections[conn] = true
+			this.connections[conn.uid] = conn
 
 			// get remote address
 			wsRAddress := conn.ws.RemoteAddr().String()
@@ -44,9 +44,9 @@ func (this *hub) Run() {
 
 		// unregister connection
 		case conn := <-this.unregister:
-			if _, ok := this.connections[conn]; ok {
+			if _, ok := this.connections[conn.uid]; ok {
 				close(conn.send)
-				delete(this.connections, conn)
+				delete(this.connections, conn.uid)
 
 				// unsubscribe from all topic
 				this.service.unSubscribeAll(conn.uid)
@@ -79,14 +79,12 @@ func (this *hub) Run() {
 				subscribers := this.service.getSubscribers(msg.Topic)
 				if len(subscribers) > 0 {
 					for _, subscriberId := range subscribers {
-						for conn := range this.connections {
-							if conn.uid == subscriberId {
-								select {
-								case conn.send <- b.message:
-								default:
-									close(conn.send)
-									delete(this.connections, conn)
-								}
+						if conn, ok := this.connections[subscriberId]; ok {
+							select {
+							case conn.send <- b.message:
+							default:
+								close(conn.send)
+								delete(this.connections, conn.uid)
 							}
 						}
 					}
