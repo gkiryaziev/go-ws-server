@@ -17,19 +17,15 @@ var upgrader = &websocket.Upgrader{
 }
 
 type wsController struct {
-	hub *hub
+	hub *Hub
 }
 
-// ==========================
-// Websocket Controller
-// ==========================
-func NewWsController(hub *hub) *wsController {
+// Websocket Controller.
+func NewWsController(hub *Hub) *wsController {
 	return &wsController{hub}
 }
 
-// ==========================
-// Websocket Handler
-// ==========================
+// Websocket Handler.
 func (this *wsController) WsHandler(w http.ResponseWriter, r *http.Request) {
 	// get incoming connection
 	ws, err := upgrader.Upgrade(w, r, nil)

@@ -17,9 +17,7 @@ func NewLogController(db *sqlx.DB) *logController {
 	return &logController{newLogService(db)}
 }
 
-// ========================
-// get logs
-// ========================
+// get logs.
 func (this *logController) GetLogs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 

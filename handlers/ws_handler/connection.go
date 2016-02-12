@@ -8,7 +8,7 @@ type connection struct {
 	ws   *websocket.Conn
 	uid  string
 	send chan []byte
-	hub  *hub
+	hub  *Hub
 }
 
 type broadcast struct {
@@ -17,10 +17,8 @@ type broadcast struct {
 	message []byte
 }
 
-// ==========================
-// Connection constructor
-// ==========================
-func NewConnection(ws *websocket.Conn, uid string, hub *hub) *connection {
+// Connection constructor.
+func NewConnection(ws *websocket.Conn, uid string, hub *Hub) *connection {
 	return &connection{
 		ws:   ws,
 		uid:  uid,
@@ -29,9 +27,7 @@ func NewConnection(ws *websocket.Conn, uid string, hub *hub) *connection {
 	}
 }
 
-// ==========================
-// Connection reader
-// ==========================
+// Connection reader.
 func (this *connection) reader() {
 	b := &broadcast{}
 	for {
@@ -50,9 +46,7 @@ func (this *connection) reader() {
 	this.ws.Close()
 }
 
-// ==========================
-// Connection writer
-// ==========================
+// Connection writer.
 func (this *connection) writer() {
 	for message := range this.send {
 		err := this.ws.WriteMessage(websocket.TextMessage, message)

@@ -15,9 +15,7 @@ func newLogService(db *sqlx.DB) *logService {
 	return &logService{db}
 }
 
-// ========================
-// get logs
-// ========================
+// get logs.
 func (this *logService) getLogs() *utils.ResultTransformer {
 
 	logs := []LogModel{}
@@ -33,9 +31,7 @@ func (this *logService) getLogs() *utils.ResultTransformer {
 	return result
 }
 
-// ==========================
-// truncate table
-// ==========================
+// truncate table.
 func (this *logService) truncateTable(table string) error {
 	_, err := this.db.NamedExec("delete from :table", map[string]interface{}{"table": table})
 	if err != nil {

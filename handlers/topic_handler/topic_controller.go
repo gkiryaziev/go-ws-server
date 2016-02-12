@@ -17,9 +17,7 @@ func NewTopicController(db *sqlx.DB) *topicController {
 	return &topicController{newTopicService(db)}
 }
 
-// ========================
-// get topics
-// ========================
+// get topics.
 func (this *topicController) GetTopics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 

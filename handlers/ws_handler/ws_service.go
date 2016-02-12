@@ -15,9 +15,8 @@ func newWSService(db *sqlx.DB) *wsService {
 	return &wsService{db}
 }
 
-// ==========================
-// get all subscribers by topic name
-// ==========================
+
+// get all subscribers by topic name.
 func (this *wsService) getSubscribers(topicName string) []string {
 	var uids []string
 	err := this.db.Select(&uids, "select uid from subscribers where topic_id = (select id from topics where name = ?)",
@@ -28,9 +27,8 @@ func (this *wsService) getSubscribers(topicName string) []string {
 	return uids
 }
 
-// ==========================
-// subscribe to new topic
-// ==========================
+
+// subscribe to new topic.
 func (this *wsService) subscribe(topicName, uid string) error {
 
 	// check if topic exist
@@ -77,9 +75,8 @@ func (this *wsService) subscribe(topicName, uid string) error {
 	return nil
 }
 
-// ==========================
-// unsubscribe from topic
-// ==========================
+
+// unsubscribe from topic.
 func (this *wsService) unSubscribe(topicName, uid string) error {
 	_, err := this.db.NamedExec("delete from subscribers where uid = :uid and topic_id = (select id from topics where name = :name)",
 		map[string]interface{}{"uid": uid, "name": topicName})
@@ -89,9 +86,8 @@ func (this *wsService) unSubscribe(topicName, uid string) error {
 	return nil
 }
 
-// ==========================
-// unsubscribe from all topic
-// ==========================
+
+// unsubscribe from all topic.
 func (this *wsService) unSubscribeAll(uid string) error {
 	_, err := this.db.NamedExec("delete from subscribers where uid = :uid",
 		map[string]interface{}{"uid": uid})
@@ -101,9 +97,8 @@ func (this *wsService) unSubscribeAll(uid string) error {
 	return nil
 }
 
-// ==========================
-// add log
-// ==========================
+
+// add log.
 func (this *wsService) addLog(uid, remote_address, message string) error {
 	mutex.Lock()
 	defer mutex.Unlock()

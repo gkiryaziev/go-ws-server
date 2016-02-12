@@ -5,7 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type hub struct {
+type Hub struct {
 	connections map[string]*connection
 	broadcast   chan *broadcast
 	register    chan *connection
@@ -13,11 +13,9 @@ type hub struct {
 	service     *wsService
 }
 
-// ==========================
-// Hub constructor
-// ==========================
-func NewHub(db *sqlx.DB) *hub {
-	return &hub{
+// Hub constructor.
+func NewHub(db *sqlx.DB) *Hub {
+	return &Hub{
 		connections: make(map[string]*connection),
 		broadcast:   make(chan *broadcast),
 		register:    make(chan *connection),
@@ -26,10 +24,8 @@ func NewHub(db *sqlx.DB) *hub {
 	}
 }
 
-// ==========================
-// Hub main method
-// ==========================
-func (this *hub) Run() {
+// Hub main method.
+func (this *Hub) Run() {
 	for {
 		select {
 		// register new connection
@@ -76,15 +72,23 @@ func (this *hub) Run() {
 			case "UNSUBSCRIBE":
 				this.service.unSubscribe(msg.Topic, b.uid)
 			case "PUBLISH":
+				// get all subscribers by topic name
 				subscribers := this.service.getSubscribers(msg.Topic)
+				// check if subscribers are greater then zero
 				if len(subscribers) > 0 {
+					// get subscriber from list
 					for _, subscriberId := range subscribers {
-						if conn, ok := this.connections[subscriberId]; ok {
-							select {
-							case conn.send <- b.message:
-							default:
-								close(conn.send)
-								delete(this.connections, conn.uid)
+						// check if subscriber is not me
+						if subscriberId != b.uid {
+							// get subscriber connection by id
+							if conn, ok := this.connections[subscriberId]; ok {
+								select {
+								// send message
+								case conn.send <- b.message:
+								default:
+									close(conn.send)
+									delete(this.connections, conn.uid)
+								}
 							}
 						}
 					}

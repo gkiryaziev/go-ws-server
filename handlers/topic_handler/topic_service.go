@@ -15,9 +15,7 @@ func newTopicService(db *sqlx.DB) *topicService {
 	return &topicService{db}
 }
 
-// ========================
-// get topics
-// ========================
+// get topics.
 func (this *topicService) getTopics() *utils.ResultTransformer {
 
 	topics := []TopicModel{}
