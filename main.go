@@ -10,6 +10,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 
 	hdlLog "./handlers/log_handler"
+	hdlSubscriber "./handlers/subscriber_handler"
 	hdlTopic "./handlers/topic_handler"
 	hdlWs "./handlers/ws_handler"
 )
@@ -44,11 +45,13 @@ func main() {
 	wsCtrl := hdlWs.NewWsController(hub)
 	logCtrl := hdlLog.NewLogController(db)
 	topicCtrl := hdlTopic.NewTopicController(db)
+	subscriberCtrl := hdlSubscriber.NewSubscriberController(db)
 
 	// user handler
 	mx.HandleFunc("/ws", wsCtrl.WsHandler)
 	mx.HandleFunc("/api/v1/logs", logCtrl.GetLogs).Methods("GET")
 	mx.HandleFunc("/api/v1/topics", topicCtrl.GetTopics).Methods("GET")
+	mx.HandleFunc("/api/v1/subscribers", subscriberCtrl.GetSubscribers).Methods("GET")
 
 	// static
 	mx.PathPrefix("/").Handler(http.FileServer(http.Dir("public")))
