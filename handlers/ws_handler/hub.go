@@ -42,6 +42,7 @@ func (this *Hub) Run() {
 		case conn := <-this.unregister:
 			if _, ok := this.connections[conn.uid]; ok {
 				close(conn.send)
+				
 				delete(this.connections, conn.uid)
 
 				// unsubscribe from all topic
