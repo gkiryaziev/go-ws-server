@@ -10,6 +10,4 @@ Message example:
 {"action" : "ACTION", "topic" : "TOPIC NAME", "data" : "DATA"}
 ```
 
-PS Version with goroutines and channels.
-
 ![Mind](/mind.png?raw=true "Mind")
