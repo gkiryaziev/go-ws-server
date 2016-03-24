@@ -4,3 +4,7 @@
 
 bin/
 pkg/
+
+vendor/src/
+
+config.yaml

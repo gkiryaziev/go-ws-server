@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"ws.server/conf"
 	hdlLog "ws.server/handlers/log_handler"
 	hdlSubscriber "ws.server/handlers/subscriber_handler"
 	hdlTopic "ws.server/handlers/topic_handler"
@@ -24,12 +25,11 @@ func checkError(err error) {
 func main() {
 	mx := mux.NewRouter()
 
-	// variables
-	hostIP := "127.0.0.1"
-	hostPort := "8000"
+	// config
+	config := conf.GetConfig()
 
 	// http server address and port
-	hostBind := fmt.Sprintf("%s:%s", hostIP, hostPort)
+	hostBind := fmt.Sprintf("%s:%s", config.Server.Host, config.Server.Port)
 
 	// open connection to database
 	db, err := sqlx.Connect("sqlite3", "base.db3")
