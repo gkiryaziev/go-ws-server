@@ -16,11 +16,10 @@ func newWSService(db *sqlx.DB) *wsService {
 	return &wsService{db}
 }
 
-
 // get all subscribers by topic name.
-func (this *wsService) getSubscribers(topicName string) []string {
+func (wss *wsService) getSubscribers(topicName string) []string {
 	var uids []string
-	err := this.db.Select(&uids, "select uid from subscribers where topic_id = (select id from topics where name = ?)",
+	err := wss.db.Select(&uids, "select uid from subscribers where topic_id = (select id from topics where name = ?)",
 		topicName)
 	if err != nil {
 		panic(err)
@@ -28,19 +27,18 @@ func (this *wsService) getSubscribers(topicName string) []string {
 	return uids
 }
 
-
 // subscribe to new topic.
-func (this *wsService) subscribe(topicName, uid string) error {
+func (wss *wsService) subscribe(topicName, uid string) error {
 
 	// check if topic exist
 	var topic_id int
-	err := this.db.Get(&topic_id, "select id from topics where name = ?", topicName)
+	err := wss.db.Get(&topic_id, "select id from topics where name = ?", topicName)
 	if err != nil {
 		topic_id = 0
 	}
 
 	if topic_id == 0 {
-		result, err := this.db.NamedExec("insert into topics(name) values(:name)",
+		result, err := wss.db.NamedExec("insert into topics(name) values(:name)",
 			map[string]interface{}{"name": topicName})
 		if err != nil {
 			return err
@@ -49,7 +47,7 @@ func (this *wsService) subscribe(topicName, uid string) error {
 		if err != nil {
 			return err
 		}
-		_, err = this.db.NamedExec("insert into subscribers(uid, topic_id) values(:uid, :id)",
+		_, err = wss.db.NamedExec("insert into subscribers(uid, topic_id) values(:uid, :id)",
 			map[string]interface{}{"uid": uid, "id": id})
 		if err != nil {
 			return err
@@ -60,13 +58,13 @@ func (this *wsService) subscribe(topicName, uid string) error {
 
 		// check if subscriber exist
 		var subscriber_id int
-		err := this.db.Get(&subscriber_id, "select id from subscribers where uid = ? and topic_id = ?", uid, topic_id)
+		err := wss.db.Get(&subscriber_id, "select id from subscribers where uid = ? and topic_id = ?", uid, topic_id)
 		if err != nil {
 			subscriber_id = 0
 		}
 
 		if subscriber_id == 0 {
-			_, err = this.db.NamedExec("insert into subscribers(uid, topic_id) values(:uid, :id)",
+			_, err = wss.db.NamedExec("insert into subscribers(uid, topic_id) values(:uid, :id)",
 				map[string]interface{}{"uid": uid, "id": topic_id})
 			if err != nil {
 				return err
@@ -76,10 +74,9 @@ func (this *wsService) subscribe(topicName, uid string) error {
 	return nil
 }
 
-
-// unsubscribe from topic.
-func (this *wsService) unSubscribe(topicName, uid string) error {
-	_, err := this.db.NamedExec("delete from subscribers where uid = :uid and topic_id = (select id from topics where name = :name)",
+// unSubscribe from topic.
+func (wss *wsService) unSubscribe(topicName, uid string) error {
+	_, err := wss.db.NamedExec("delete from subscribers where uid = :uid and topic_id = (select id from topics where name = :name)",
 		map[string]interface{}{"uid": uid, "name": topicName})
 	if err != nil {
 		return err
@@ -87,10 +84,9 @@ func (this *wsService) unSubscribe(topicName, uid string) error {
 	return nil
 }
 
-
-// unsubscribe from all topic.
-func (this *wsService) unSubscribeAll(uid string) error {
-	_, err := this.db.NamedExec("delete from subscribers where uid = :uid",
+// unSubscribeAll unsubscribe from all topic.
+func (wss *wsService) unSubscribeAll(uid string) error {
+	_, err := wss.db.NamedExec("delete from subscribers where uid = :uid",
 		map[string]interface{}{"uid": uid})
 	if err != nil {
 		return err
@@ -98,13 +94,12 @@ func (this *wsService) unSubscribeAll(uid string) error {
 	return nil
 }
 
-
-// add log.
-func (this *wsService) addLog(uid, remote_address, message string) error {
+// addLog is add log.
+func (wss *wsService) addLog(uid, remote_address, message string) error {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	_, err := this.db.NamedExec("insert into logs(uid, remote_address, message) values(:uid, :remote_address, :message)",
+	_, err := wss.db.NamedExec("insert into logs(uid, remote_address, message) values(:uid, :remote_address, :message)",
 		map[string]interface{}{"uid": uid, "remote_address": remote_address, "message": message})
 	if err != nil {
 		return err

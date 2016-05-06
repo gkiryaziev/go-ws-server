@@ -1,10 +1,6 @@
 .idea/
 .git/
+
 *.xmind
-
-bin/
-pkg/
-
-vendor/src/
 
 config.yaml

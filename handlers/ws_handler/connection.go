@@ -17,7 +17,7 @@ type broadcast struct {
 	message []byte
 }
 
-// Connection constructor.
+// NewConnection return new connection object.
 func NewConnection(ws *websocket.Conn, uid string, hub *Hub) *connection {
 	return &connection{
 		ws:   ws,
@@ -27,32 +27,32 @@ func NewConnection(ws *websocket.Conn, uid string, hub *Hub) *connection {
 	}
 }
 
-// Connection reader.
-func (this *connection) reader() {
+// reader is connection reader.
+func (c *connection) reader() {
 	b := &broadcast{}
 	for {
 		// read incoming message
-		_, message, err := this.ws.ReadMessage()
+		_, message, err := c.ws.ReadMessage()
 		if err != nil {
 			break
 		}
 
-		b.uid = this.uid
-		b.address = this.ws.RemoteAddr().String()
+		b.uid = c.uid
+		b.address = c.ws.RemoteAddr().String()
 		b.message = message
 
-		this.hub.broadcast <- b
+		c.hub.broadcast <- b
 	}
-	this.ws.Close()
+	c.ws.Close()
 }
 
-// Connection writer.
-func (this *connection) writer() {
-	for message := range this.send {
-		err := this.ws.WriteMessage(websocket.TextMessage, message)
+// writer is connection writer.
+func (c *connection) writer() {
+	for message := range c.send {
+		err := c.ws.WriteMessage(websocket.TextMessage, message)
 		if err != nil {
 			break
 		}
 	}
-	this.ws.Close()
+	c.ws.Close()
 }

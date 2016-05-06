@@ -3,9 +3,9 @@ package ws_handler
 import (
 	"net/http"
 
-	"ws.server/utils"
-
 	"github.com/gorilla/websocket"
+
+	"github.com/gkiryaziev/go-ws-server/utils"
 )
 
 var upgrader = &websocket.Upgrader{
@@ -20,13 +20,13 @@ type wsController struct {
 	hub *Hub
 }
 
-// Websocket Controller.
+// NewWsController return new wsController object.
 func NewWsController(hub *Hub) *wsController {
 	return &wsController{hub}
 }
 
-// Websocket Handler.
-func (this *wsController) WsHandler(w http.ResponseWriter, r *http.Request) {
+// WsHandler websocket handler.
+func (wsc *wsController) WsHandler(w http.ResponseWriter, r *http.Request) {
 	// get incoming connection
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -37,7 +37,7 @@ func (this *wsController) WsHandler(w http.ResponseWriter, r *http.Request) {
 	uid := utils.GenerateRandomMD5String(16)
 
 	// add id and connection to pool
-	conn := NewConnection(ws, uid, this.hub)
+	conn := NewConnection(ws, uid, wsc.hub)
 	conn.hub.register <- conn
 
 	// onClose

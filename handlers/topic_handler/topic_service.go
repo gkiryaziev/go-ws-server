@@ -1,26 +1,27 @@
 package topic_handler
 
 import (
-	"ws.server/models"
-	"ws.server/utils"
-
 	"github.com/jmoiron/sqlx"
+
+	"github.com/gkiryaziev/go-ws-server/models"
+	"github.com/gkiryaziev/go-ws-server/utils"
 )
 
 type topicService struct {
 	db *sqlx.DB
 }
 
+// newTopicService return new topicService object.
 func newTopicService(db *sqlx.DB) *topicService {
 	return &topicService{db}
 }
 
-// get topics.
-func (this *topicService) getTopics() *utils.ResultTransformer {
+// getTopics return all topics.
+func (ts *topicService) getTopics() *utils.ResultTransformer {
 
 	topics := []TopicModel{}
 
-	err := this.db.Select(&topics, "select * from topics order by id asc limit 500")
+	err := ts.db.Select(&topics, "select * from topics order by id asc limit 500")
 	if err != nil {
 		panic(err)
 	}

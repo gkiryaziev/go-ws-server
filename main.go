@@ -5,17 +5,18 @@ import (
 	"log"
 	"net/http"
 
-	"ws.server/conf"
-	hdlLog "ws.server/handlers/log_handler"
-	hdlSubscriber "ws.server/handlers/subscriber_handler"
-	hdlTopic "ws.server/handlers/topic_handler"
-	hdlWs "ws.server/handlers/ws_handler"
-
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+
+	"github.com/gkiryaziev/go-ws-server/conf"
+	hdlLog "github.com/gkiryaziev/go-ws-server/handlers/log_handler"
+	hdlSubscriber "github.com/gkiryaziev/go-ws-server/handlers/subscriber_handler"
+	hdlTopic "github.com/gkiryaziev/go-ws-server/handlers/topic_handler"
+	hdlWs "github.com/gkiryaziev/go-ws-server/handlers/ws_handler"
 )
 
+// checkError check errors
 func checkError(err error) {
 	if err != nil {
 		log.Fatal(err)
@@ -26,7 +27,8 @@ func main() {
 	mx := mux.NewRouter()
 
 	// config
-	config := conf.GetConfig()
+	config, err := conf.NewConfig("config.yaml").Load()
+	checkError(err)
 
 	// http server address and port
 	hostBind := fmt.Sprintf("%s:%s", config.Server.Host, config.Server.Port)

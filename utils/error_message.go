@@ -6,9 +6,7 @@ type ResponseMessage struct {
 	Info    string `json:"info"`
 }
 
-// ========================
-// return message as json string
-// ========================
+// ErrorMessage return message as json string
 func ErrorMessage(status int, msg string) string {
 	msg_final := &ResponseMessage{status, msg, "/docs/api/errors"}
 	result, _ := NewResultTransformer(msg_final).ToJson()
