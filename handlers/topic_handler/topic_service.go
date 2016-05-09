@@ -1,4 +1,4 @@
-package topic_handler
+package topichandler
 
 import (
 	"github.com/jmoiron/sqlx"
@@ -7,17 +7,18 @@ import (
 	"github.com/gkiryaziev/go-ws-server/utils"
 )
 
-type topicService struct {
+// TopicService struct
+type TopicService struct {
 	db *sqlx.DB
 }
 
-// newTopicService return new topicService object.
-func newTopicService(db *sqlx.DB) *topicService {
-	return &topicService{db}
+// newTopicService return new TopicService object.
+func newTopicService(db *sqlx.DB) *TopicService {
+	return &TopicService{db}
 }
 
 // getTopics return all topics.
-func (ts *topicService) getTopics() *utils.ResultTransformer {
+func (ts *TopicService) getTopics() *utils.ResultTransformer {
 
 	topics := []TopicModel{}
 
@@ -26,7 +27,7 @@ func (ts *topicService) getTopics() *utils.ResultTransformer {
 		panic(err)
 	}
 
-	header := models.Header{"ok", len(topics), topics}
+	header := models.Header{Status: "ok", Count: len(topics), Data: topics}
 	result := utils.NewResultTransformer(header)
 
 	return result

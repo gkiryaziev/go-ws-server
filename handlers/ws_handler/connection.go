@@ -1,25 +1,27 @@
-package ws_handler
+package wshandler
 
 import (
 	"github.com/gorilla/websocket"
 )
 
-type connection struct {
+// Connection struct
+type Connection struct {
 	ws   *websocket.Conn
 	uid  string
 	send chan []byte
 	hub  *Hub
 }
 
-type broadcast struct {
+// Broadcast struct
+type Broadcast struct {
 	uid     string
 	address string
 	message []byte
 }
 
-// NewConnection return new connection object.
-func NewConnection(ws *websocket.Conn, uid string, hub *Hub) *connection {
-	return &connection{
+// NewConnection return new Connection object.
+func NewConnection(ws *websocket.Conn, uid string, hub *Hub) *Connection {
+	return &Connection{
 		ws:   ws,
 		uid:  uid,
 		send: make(chan []byte, 256),
@@ -27,9 +29,9 @@ func NewConnection(ws *websocket.Conn, uid string, hub *Hub) *connection {
 	}
 }
 
-// reader is connection reader.
-func (c *connection) reader() {
-	b := &broadcast{}
+// reader is Connection reader.
+func (c *Connection) reader() {
+	b := &Broadcast{}
 	for {
 		// read incoming message
 		_, message, err := c.ws.ReadMessage()
@@ -46,8 +48,8 @@ func (c *connection) reader() {
 	c.ws.Close()
 }
 
-// writer is connection writer.
-func (c *connection) writer() {
+// writer is Connection writer.
+func (c *Connection) writer() {
 	for message := range c.send {
 		err := c.ws.WriteMessage(websocket.TextMessage, message)
 		if err != nil {

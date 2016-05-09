@@ -1,4 +1,4 @@
-package ws_handler
+package wshandler
 
 import (
 	"net/http"
@@ -16,17 +16,18 @@ var upgrader = &websocket.Upgrader{
 	},
 }
 
-type wsController struct {
+// WSController struct
+type WSController struct {
 	hub *Hub
 }
 
-// NewWsController return new wsController object.
-func NewWsController(hub *Hub) *wsController {
-	return &wsController{hub}
+// NewWsController return new WSController object.
+func NewWsController(hub *Hub) *WSController {
+	return &WSController{hub}
 }
 
 // WsHandler websocket handler.
-func (wsc *wsController) WsHandler(w http.ResponseWriter, r *http.Request) {
+func (wsc *WSController) WsHandler(w http.ResponseWriter, r *http.Request) {
 	// get incoming connection
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

@@ -1,4 +1,4 @@
-package subscriber_handler
+package subscriberhandler
 
 import (
 	"github.com/jmoiron/sqlx"
@@ -7,18 +7,19 @@ import (
 	"github.com/gkiryaziev/go-ws-server/utils"
 )
 
-type subscriberService struct {
+// SubscriberService struct
+type SubscriberService struct {
 	db *sqlx.DB
 }
 
-// newSubscriberService return new subscriberService object.
-func newSubscriberService(db *sqlx.DB) *subscriberService {
-	return &subscriberService{db}
+// newSubscriberService return new SubscriberService object.
+func newSubscriberService(db *sqlx.DB) *SubscriberService {
+	return &SubscriberService{db}
 }
 
 // getSubscribers return all subscribers.
 // note: get topic as name instead of id
-func (ss *subscriberService) getSubscribers() *utils.ResultTransformer {
+func (ss *SubscriberService) getSubscribers() *utils.ResultTransformer {
 
 	subscribers := []SubscriberModel{}
 
@@ -28,7 +29,7 @@ func (ss *subscriberService) getSubscribers() *utils.ResultTransformer {
 		panic(err)
 	}
 
-	header := models.Header{"ok", len(subscribers), subscribers}
+	header := models.Header{Status: "ok", Count: len(subscribers), Data: subscribers}
 	result := utils.NewResultTransformer(header)
 
 	return result

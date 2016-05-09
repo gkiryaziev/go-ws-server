@@ -1,5 +1,7 @@
 ##	Golang Publish/Subscribe Websocket Server
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/gkiryaziev/go-ws-server)](https://goreportcard.com/report/github.com/gkiryaziev/go-ws-server)
+
 [Go](https://golang.org/) websocket server with [Gorilla](http://www.gorillatoolkit.org/) toolkit and [SQLite](https://www.sqlite.org/) database.
 With this server you can subscribe, unsubscribe and publish messages.
 

@@ -1,4 +1,4 @@
-package ws_handler
+package wshandler
 
 import (
 	"sync"
@@ -31,13 +31,13 @@ func (wss *wsService) getSubscribers(topicName string) []string {
 func (wss *wsService) subscribe(topicName, uid string) error {
 
 	// check if topic exist
-	var topic_id int
-	err := wss.db.Get(&topic_id, "select id from topics where name = ?", topicName)
+	var topicID int
+	err := wss.db.Get(&topicID, "select id from topics where name = ?", topicName)
 	if err != nil {
-		topic_id = 0
+		topicID = 0
 	}
 
-	if topic_id == 0 {
+	if topicID == 0 {
 		result, err := wss.db.NamedExec("insert into topics(name) values(:name)",
 			map[string]interface{}{"name": topicName})
 		if err != nil {
@@ -54,18 +54,18 @@ func (wss *wsService) subscribe(topicName, uid string) error {
 		}
 	}
 
-	if topic_id > 0 {
+	if topicID > 0 {
 
 		// check if subscriber exist
-		var subscriber_id int
-		err := wss.db.Get(&subscriber_id, "select id from subscribers where uid = ? and topic_id = ?", uid, topic_id)
+		var subscriberID int
+		err := wss.db.Get(&subscriberID, "select id from subscribers where uid = ? and topic_id = ?", uid, topicID)
 		if err != nil {
-			subscriber_id = 0
+			subscriberID = 0
 		}
 
-		if subscriber_id == 0 {
+		if subscriberID == 0 {
 			_, err = wss.db.NamedExec("insert into subscribers(uid, topic_id) values(:uid, :id)",
-				map[string]interface{}{"uid": uid, "id": topic_id})
+				map[string]interface{}{"uid": uid, "id": topicID})
 			if err != nil {
 				return err
 			}
@@ -95,12 +95,12 @@ func (wss *wsService) unSubscribeAll(uid string) error {
 }
 
 // addLog is add log.
-func (wss *wsService) addLog(uid, remote_address, message string) error {
+func (wss *wsService) addLog(uid, remoteAddress, message string) error {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	_, err := wss.db.NamedExec("insert into logs(uid, remote_address, message) values(:uid, :remote_address, :message)",
-		map[string]interface{}{"uid": uid, "remote_address": remote_address, "message": message})
+		map[string]interface{}{"uid": uid, "remote_address": remoteAddress, "message": message})
 	if err != nil {
 		return err
 	}

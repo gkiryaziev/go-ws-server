@@ -1,4 +1,4 @@
-package log_handler
+package loghandler
 
 import (
 	"github.com/jmoiron/sqlx"
@@ -7,17 +7,18 @@ import (
 	"github.com/gkiryaziev/go-ws-server/utils"
 )
 
-type logService struct {
+// LogService struct
+type LogService struct {
 	db *sqlx.DB
 }
 
-// newLogService return logService object.
-func newLogService(db *sqlx.DB) *logService {
-	return &logService{db}
+// newLogService return LogService object.
+func newLogService(db *sqlx.DB) *LogService {
+	return &LogService{db}
 }
 
 // getLogs return all logs.
-func (ls *logService) getLogs() *utils.ResultTransformer {
+func (ls *LogService) getLogs() *utils.ResultTransformer {
 
 	logs := []LogModel{}
 
@@ -26,14 +27,14 @@ func (ls *logService) getLogs() *utils.ResultTransformer {
 		panic(err)
 	}
 
-	header := models.Header{"ok", len(logs), logs}
+	header := models.Header{Status: "ok", Count: len(logs), Data: logs}
 	result := utils.NewResultTransformer(header)
 
 	return result
 }
 
 // truncateTable truncate table.
-func (ls *logService) truncateTable(table string) error {
+func (ls *LogService) truncateTable(table string) error {
 	_, err := ls.db.NamedExec("delete from :table", map[string]interface{}{"table": table})
 	if err != nil {
 		return err

@@ -1,5 +1,6 @@
-package ws_handler
+package wshandler
 
+// WSMessage struct
 type WSMessage struct {
 	Action string `json:"action"`
 	Topic  string `json:"topic"`

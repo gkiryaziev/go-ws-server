@@ -1,4 +1,4 @@
-package subscriber_handler
+package subscriberhandler
 
 import (
 	"fmt"
@@ -9,20 +9,21 @@ import (
 	"github.com/gkiryaziev/go-ws-server/utils"
 )
 
-type subscriberController struct {
-	service *subscriberService
+// SubscriberController struct
+type SubscriberController struct {
+	service *SubscriberService
 }
 
-// NewSubscriberController return new subscriberController object.
-func NewSubscriberController(db *sqlx.DB) *subscriberController {
-	return &subscriberController{newSubscriberService(db)}
+// NewSubscriberController return new SubscriberController object.
+func NewSubscriberController(db *sqlx.DB) *SubscriberController {
+	return &SubscriberController{newSubscriberService(db)}
 }
 
 // GetSubscribers return all subscribers.
-func (sc *subscriberController) GetSubscribers(w http.ResponseWriter, r *http.Request) {
+func (sc *SubscriberController) GetSubscribers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	logs, err := sc.service.getSubscribers().ToJson()
+	logs, err := sc.service.getSubscribers().ToJSON()
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprint(w, utils.ErrorMessage(500, err.Error()))

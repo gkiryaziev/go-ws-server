@@ -1,4 +1,4 @@
-package log_handler
+package loghandler
 
 import (
 	"fmt"
@@ -9,20 +9,21 @@ import (
 	"github.com/gkiryaziev/go-ws-server/utils"
 )
 
-type logController struct {
-	service *logService
+// LogController struct
+type LogController struct {
+	service *LogService
 }
 
-// NewLogController return new logController object.
-func NewLogController(db *sqlx.DB) *logController {
-	return &logController{newLogService(db)}
+// NewLogController return new LogController object.
+func NewLogController(db *sqlx.DB) *LogController {
+	return &LogController{newLogService(db)}
 }
 
 // GetLogs return all logs.
-func (lc *logController) GetLogs(w http.ResponseWriter, r *http.Request) {
+func (lc *LogController) GetLogs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	logs, err := lc.service.getLogs().ToJson()
+	logs, err := lc.service.getLogs().ToJSON()
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprint(w, utils.ErrorMessage(500, err.Error()))
