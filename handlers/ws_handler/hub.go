@@ -1,4 +1,4 @@
-package ws_handler
+package wshandler
 
 import (
 	"encoding/json"
@@ -6,21 +6,22 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//Hub struct
 type Hub struct {
-	connections map[string]*connection
-	broadcast   chan *broadcast
-	register    chan *connection
-	unregister  chan *connection
+	connections map[string]*Connection
+	broadcast   chan *Broadcast
+	register    chan *Connection
+	unregister  chan *Connection
 	service     *wsService
 }
 
 // NewHub return new Hub object.
 func NewHub(db *sqlx.DB) *Hub {
 	return &Hub{
-		connections: make(map[string]*connection),
-		broadcast:   make(chan *broadcast),
-		register:    make(chan *connection),
-		unregister:  make(chan *connection),
+		connections: make(map[string]*Connection),
+		broadcast:   make(chan *Broadcast),
+		register:    make(chan *Connection),
+		unregister:  make(chan *Connection),
 		service:     newWSService(db),
 	}
 }
@@ -79,11 +80,11 @@ func (h *Hub) Run() {
 				// check if subscribers are greater then zero
 				if len(subscribers) > 0 {
 					// get subscriber from list
-					for _, subscriberId := range subscribers {
+					for _, subscriberID := range subscribers {
 						// check if subscriber is not me
-						if subscriberId != b.uid {
+						if subscriberID != b.uid {
 							// get subscriber connection by id
-							if conn, ok := h.connections[subscriberId]; ok {
+							if conn, ok := h.connections[subscriberID]; ok {
 								select {
 								// send message
 								case conn.send <- b.message:

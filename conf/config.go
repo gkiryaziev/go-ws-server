@@ -6,18 +6,19 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type config struct {
+// ConfigManager struct
+type ConfigManager struct {
 	file string
 }
 
 // NewConfig constructor
-func NewConfig(file string) *config {
-	return &config{file}
+func NewConfig(file string) *ConfigManager {
+	return &ConfigManager{file}
 }
 
 // Load config from file
-func (this *config) Load() (*Config, error) {
-	data, err := ioutil.ReadFile(this.file)
+func (cm *ConfigManager) Load() (*Config, error) {
+	data, err := ioutil.ReadFile(cm.file)
 	if err != nil {
 		return nil, err
 	}
@@ -31,11 +32,13 @@ func (this *config) Load() (*Config, error) {
 	return config, nil
 }
 
+// Config struct
 type Config struct {
 	Debug  bool   `yaml:"debug"`
 	Server Server `yaml:"server"`
 }
 
+// Server struct
 type Server struct {
 	Host string `yaml:"host"`
 	Port string `yaml:"port"`

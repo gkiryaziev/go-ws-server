@@ -1,11 +1,12 @@
-package log_handler
+package loghandler
 
 import "time"
 
+// LogModel struct
 type LogModel struct {
-	Id            int64     `db:"id" json:"id"`
+	ID            int64     `db:"id" json:"id"`
 	DateTime      time.Time `db:"datetime" json:"datetime"`
-	Uid           string    `db:"uid" json:"uid"`
+	UID           string    `db:"uid" json:"uid"`
 	RemoteAddress string    `db:"remote_address" json:"remote_address"`
 	Message       string    `db:"message" json:"message"`
 }

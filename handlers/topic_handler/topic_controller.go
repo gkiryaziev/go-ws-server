@@ -1,4 +1,4 @@
-package topic_handler
+package topichandler
 
 import (
 	"fmt"
@@ -9,20 +9,21 @@ import (
 	"github.com/gkiryaziev/go-ws-server/utils"
 )
 
-type topicController struct {
-	service *topicService
+// TopicController struct
+type TopicController struct {
+	service *TopicService
 }
 
-// NewTopicController return new topicController object.
-func NewTopicController(db *sqlx.DB) *topicController {
-	return &topicController{newTopicService(db)}
+// NewTopicController return new TopicController object.
+func NewTopicController(db *sqlx.DB) *TopicController {
+	return &TopicController{newTopicService(db)}
 }
 
 // GetTopics return all topics.
-func (tc *topicController) GetTopics(w http.ResponseWriter, r *http.Request) {
+func (tc *TopicController) GetTopics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
-	topics, err := tc.service.getTopics().ToJson()
+	topics, err := tc.service.getTopics().ToJSON()
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprint(w, utils.ErrorMessage(500, err.Error()))

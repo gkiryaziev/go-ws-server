@@ -1,9 +1,10 @@
-package topic_handler
+package topichandler
 
 import "time"
 
+// TopicModel struct
 type TopicModel struct {
-	Id       int64     `db:"id" json:"id"`
+	ID       int64     `db:"id" json:"id"`
 	DateTime time.Time `db:"datetime" json:"datetime"`
 	Name     string    `db:"name" json:"name"`
 }
